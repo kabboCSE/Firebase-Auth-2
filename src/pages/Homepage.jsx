@@ -11,7 +11,7 @@ const Homepage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-purple-300 via-purple-500 to-purple-300 text-center">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-linear-to-br from-purple-300 via-purple-500 to-purple-300 text-center">
       <h1 className="text-5xl md:text-6xl font-bold text-white animate-bounce drop-shadow-lg">
         🚀 Homepage is Coming Soon
       </h1>
