@@ -1,13 +1,47 @@
-import { Link, useNavigate } from "react-router";
-
-import { FaEye } from "react-icons/fa";
-
-import { IoEyeOff } from "react-icons/io5";
+import { Link } from "react-router";
 
 import MyContainer from "../components/MyContainer";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { toast } from "react-toastify";
+import { auth } from "../firebase/firebase.config";
+import { FaEye } from "react-icons/fa";
+import { useState } from "react";
+import { IoEyeOff } from "react-icons/io5";
 
 const Signup = () => {
-  const handleSignup = () => {};
+  const [user, setUser] = useState({});
+  const [show, setShow] = useState(false);
+  const handleSignup = (event) => {
+    event.preventDefault();
+    const email = event.target.email?.value;
+    const password = event.target.password?.value;
+    console.log("Signup clicked!", { email, password });
+
+    // if (password.length < 6) {
+    //   toast.error("Password Length should atleast 6 digit");
+    //   return;
+    // }
+
+    const regExp =
+      /^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])(?=\S+$).*/;
+    if (!regExp.test(password)) {
+      toast.error(
+        "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character (no spaces allowed)"
+      );
+      return;
+    }
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((res) => {
+        console.log(res);
+        setUser(res.user);
+        toast.success("Signup successful!");
+      })
+      .catch((e) => {
+        console.log(e);
+        toast.error(e.message);
+      });
+  };
 
   return (
     <div className="min-h-[96vh] flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 relative overflow-hidden">
@@ -69,11 +103,17 @@ const Signup = () => {
                   Password
                 </label>
                 <input
-                  type={"text"}
+                  type={show ? "text" : "password"}
                   name="password"
                   placeholder="••••••••"
                   className="input input-bordered w-full bg-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-pink-400"
                 />
+                <span
+                  onClick={() => setShow(!show)}
+                  className="absolute right-2 top-9 cursor-pointer z-50"
+                >
+                  {show ? <FaEye /> : <IoEyeOff />}
+                </span>
               </div>
 
               <button type="submit" className="my-btn">
